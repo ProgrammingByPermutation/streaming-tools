@@ -348,3 +348,9 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+.idea/
+
+## Custom
+streaming-tools/WindowsKeyboardHook/WindowsKeyboardHook.xml
+streaming-tools/streaming-tools/streaming-tools.xml

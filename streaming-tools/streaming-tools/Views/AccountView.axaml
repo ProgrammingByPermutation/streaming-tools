@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:streaming_tools.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="50"
+             x:Class="streaming_tools.Views.AccountView">
+
+    <Design.DataContext>
+        <viewModels:AccountViewModel />
+    </Design.DataContext>
+
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Text="{Binding Username}" VerticalAlignment="Center" />
+        <Button HorizontalAlignment="Center" Width="30" Command="{Binding EditAccount}">
+            <Image Source="/Assets/pencil.png" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </Button>
+        <Button HorizontalAlignment="Center" Width="30" Command="{Binding DeleteAccount}">
+            <Image Source="/Assets/delete.png" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </Button>
+    </StackPanel>
+</UserControl>

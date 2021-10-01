@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <RootNamespace>streaming_tools</RootNamespace>
+        <Platforms>AnyCPU;x64</Platforms>
+        <ApplicationIcon>icon.ico</ApplicationIcon>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DocumentationFile>C:\dev\git\streaming-tools\streaming-tools\streaming-tools\streaming-tools.xml</DocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DocumentationFile>C:\dev\git\streaming-tools\streaming-tools\streaming-tools\streaming-tools.xml</DocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <AvaloniaResource Remove="Assets\additionalHexCodeWhitelist.txt" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="Assets\4593523901540882618-128.png" />
+        <None Remove="Assets\add.png" />
+        <None Remove="Assets\additionalHexCodeWhitelist.txt" />
+        <None Remove="Assets\delete.png" />
+        <None Remove="Assets\icon.ico" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\.editorconfig" Link=".editorconfig" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="0.10.6" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.6" />
+        <PackageReference Include="NAudio.Core" Version="2.0.0" />
+        <PackageReference Include="NAudio.WinMM" Version="2.0.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="PInvoke.User32" Version="0.7.104" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="System.Speech" Version="5.0.0" />
+        <PackageReference Include="TwitchLib" Version="3.2.0" />
+        <PackageReference Include="WhoisClient.NET" Version="3.0.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Views\AccountsView.axaml.cs">
+            <DependentUpon>AccountsView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\TtsSkipUsernamesView.axaml.cs">
+            <DependentUpon>TtsSkipUsernamesView.axaml</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="Assets\additionalHexCodeWhitelist.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\emojiHexCodes.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+</Project>

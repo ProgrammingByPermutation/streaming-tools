@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:streaming_tools.Views"
+             xmlns:viewModels="clr-namespace:streaming_tools.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300"
+             x:Class="streaming_tools.Views.TtsSkipUsernamesView">
+    <Design.DataContext>
+        <viewModels:TtsSkipUsernamesViewModel />
+    </Design.DataContext>
+
+    <StackPanel>
+        <TextBlock HorizontalAlignment="Center" FontWeight="Bold">Skip Users in TTS</TextBlock>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
+            <TextBox Width="150" Text="{Binding UserToAdd}" />
+            <Button Margin="5,0,0,0" Command="{Binding AddUser}">Add User</Button>
+        </StackPanel>
+        <views:TwoListView MaxHeight="200" DataContext="{Binding TwoListViewModel}" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WindowsKeyboardHook": {
+      "commandName": "Project",
+      "commandLineArgs": "123"
+    }
+  }
+}

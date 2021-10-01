@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:streaming_tools.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+             x:Class="streaming_tools.Views.TtsPhoneticWordsView">
+
+    <Design.DataContext>
+        <viewModels:TtsPhoneticWordsViewModel />
+    </Design.DataContext>
+
+    <StackPanel>
+        <TextBlock HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Margin="0,0,0,10">Phoentic Translations</TextBlock>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Word:</Label>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding UserEnteredWord}" />
+            <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Phonetic:</Label>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding UserEnteredPhonetic}" />
+            <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right"
+                        Grid.ColumnSpan="2">
+                <Button Command="{Binding SaveEntry}">Save</Button>
+                <Button Command="{Binding CancelEntry}">Cancel</Button>
+            </StackPanel>
+        </Grid>
+        <ScrollViewer MaxHeight="100">
+            <ItemsControl Items="{Binding WordsToPhonetics}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Path=Word}" />
+                            <Label VerticalAlignment="Center" Content="->" />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Path=Phonetic}" />
+                            <Button VerticalAlignment="Center"
+                                    Width="30"
+                                    Command="{Binding EditPhonetic}">
+                                <Image Source="/Assets/pencil.png" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" />
+                            </Button>
+                            <Button VerticalAlignment="Center"
+                                    Width="30"
+                                    Command="{Binding DeletePhonetic}">
+                                <Image Source="/Assets/delete.png" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" />
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </StackPanel>
+</UserControl>

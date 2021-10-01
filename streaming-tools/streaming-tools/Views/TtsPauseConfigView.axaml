@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:streaming_tools.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="95"
+             x:Class="streaming_tools.Views.TtsPauseConfigView">
+    <Design.DataContext>
+        <viewModels:TtsPauseConfigViewModel />
+    </Design.DataContext>
+    <StackPanel>
+        <TextBlock HorizontalAlignment="Center" FontWeight="Bold">Text-to-Speech Settings</TextBlock>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label VerticalAlignment="Center">Microphone Source:</Label>
+            <ComboBox Grid.Column="1"
+                      VerticalAlignment="Center"
+                      Margin="0,0,5,0"
+                      SelectedIndex="{Binding SelectedMicrophone}"
+                      Items="{Binding MicrophoneDevices, Mode=TwoWay}" />
+        </Grid>
+
+        <Grid Margin="0,5,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label VerticalAlignment="Center">Threshold: </Label>
+            <NumericUpDown AllowSpin="false" ShowButtonSpinner="false" Grid.Column="1"
+                           Value="{Binding PauseThreshold, Mode=TwoWay}" Minimum="0" Maximum="100"
+                           Width="20" />
+            <Grid Grid.Column="2" Margin="5, 0">
+                <Rectangle HorizontalAlignment="Left" Width="100" Height="10" Fill="black" />
+                <Rectangle HorizontalAlignment="Left" Width="{Binding MicrophoneVoiceVolume}" Height="10"
+                           Fill="red" />
+                <Rectangle HorizontalAlignment="Left"
+                           Margin="{Binding MicrophoneThresholdVisualizationMargin}"
+                           Fill="green"
+                           Width="1" Height="20" />
+            </Grid>
+        </Grid>
+    </StackPanel>
+</UserControl>
