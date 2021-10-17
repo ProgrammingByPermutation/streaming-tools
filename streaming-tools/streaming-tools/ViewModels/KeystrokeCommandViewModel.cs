@@ -64,6 +64,7 @@
             this.TimeoutUserCurrentMessage = config.TimeoutUserCurrentMessage;
             this.BanUserCurrentMessage = config.BanUserCurrentMessage;
             this.SendChatMessage = config.SendChatMessage;
+            this.SkipMessage = config.SkipMessage;
             this.deleteCallback = deleteCallback;
 
             GlobalKeyboardListener.Instance.Callback += this.OnKeystrokeReceived;
@@ -319,6 +320,7 @@
             config.KeyCode = this.KeyCode;
             config.Command = this.Command;
             config.TwitchChat = this.SelectedTwitchChat;
+            this.config.SkipMessage = this.SkipMessage;
             config.ClearMessageQueue = this.ClearMessageQueue;
             config.TimeoutUserCurrentMessage = this.TimeoutUserCurrentMessage;
             config.BanUserCurrentMessage = this.BanUserCurrentMessage;

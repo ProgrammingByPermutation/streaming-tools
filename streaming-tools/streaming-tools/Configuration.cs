@@ -347,6 +347,11 @@
         public string? TwitchChat { get; set; }
         
         /// <summary>
+        ///     Gets or sets a value indicating whether this is a keystroke to skip the current message.
+        /// </summary>
+        public bool SkipMessage { get; set; }
+        
+        /// <summary>
         ///     Gets or sets a value indicating whether this is a keystroke to skip all current messages.
         /// </summary>
         public bool ClearMessageQueue { get; set; }
