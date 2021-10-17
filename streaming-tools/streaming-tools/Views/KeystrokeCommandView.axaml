@@ -16,6 +16,7 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -23,13 +24,35 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Keystroke:</Label>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding KeyCode}" />
-            <Button Grid.Row="0" Grid.Column="2" Margin="5,0,0,0" Command="{Binding GetKeystroke}">Grab Keystroke</Button>
-            <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Command:</Label>
-            <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Command}" />
-            <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Chat:</Label>
-            <ComboBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Items="{Binding TwitchChats}"
-                      SelectedItem="{Binding SelectedTwitchChat}" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding KeyCode}" IsReadOnly="True" />
+            <StackPanel Grid.Row="0" Grid.Column="2" Margin="5,0,0,0" Orientation="Horizontal">
+                <Button Command="{Binding GetKeystroke}">Grab Keystroke</Button>
+                <Button Margin="5,0,0,0" Command="{Binding Delete}">Delete</Button>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+                <RadioButton IsChecked="{Binding SkipMessage}">
+                    Skip Message
+                </RadioButton>
+                <RadioButton IsChecked="{Binding ClearMessageQueue}">
+                    Clear Message Queue
+                </RadioButton>
+                <RadioButton IsChecked="{Binding TimeoutUserCurrentMessage}">
+                    Timeout User that Typed Current Message (1s)
+                </RadioButton>
+                <RadioButton IsChecked="{Binding BanUserCurrentMessage}">
+                    Ban User that Typed Current Message
+                </RadioButton>
+                <RadioButton IsChecked="{Binding SendChatMessage}">
+                    Send Chat Message
+                </RadioButton>
+            </StackPanel>
+            <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" IsVisible="{Binding SendChatMessage}">Command:</Label>
+            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Command}"
+                     IsVisible="{Binding SendChatMessage}" />
+            <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" IsVisible="{Binding SendChatMessage}">Chat:</Label>
+            <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Items="{Binding TwitchChats}"
+                      SelectedItem="{Binding SelectedTwitchChat}"
+                      IsVisible="{Binding SendChatMessage}" />
         </Grid>
     </StackPanel>
 </UserControl>

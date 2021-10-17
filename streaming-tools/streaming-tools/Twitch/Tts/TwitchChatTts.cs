@@ -17,7 +17,7 @@
         /// <summary>
         ///     The configuration for the twitch chat.
         /// </summary>
-        private readonly TwitchChatConfiguration? chatConfig;
+        public TwitchChatConfiguration? ChatConfig { get; }
 
         /// <summary>
         ///     The collection of sounds to play.
@@ -59,6 +59,8 @@
         /// </summary>
         private ManualResetEvent? ttsSoundOutputSignal;
 
+        private int messageToSkip;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="TwitchChatTts" /> class.
         /// </summary>
@@ -69,8 +71,7 @@
             this.soundThread.Name = "TwitchChatTts Thread";
             this.soundThread.IsBackground = true;
             this.soundThread.Start();
-            this.chatConfig = config;
-            GlobalKeyboardListener.Instance.Callback += this.KeyboardPressCallback;
+            this.ChatConfig = config;
         }
 
         /// <summary>
@@ -92,21 +93,23 @@
                 this.ttsSoundOutput = null;
             }
 
-            if (null == this.chatConfig) {
+            if (null == this.ChatConfig) {
                 return;
             }
 
-            var user = Configuration.Instance.GetTwitchAccount(this.chatConfig.AccountUsername);
+            var user = Configuration.Instance.GetTwitchAccount(this.ChatConfig.AccountUsername);
             if (null == user) {
                 return;
             }
 
             var twitchManager = TwitchChatManager.Instance;
-            twitchManager.RemoveTwitchChannel(user, this.chatConfig.TwitchChannel, this.Client_OnMessageReceived);
+            twitchManager.RemoveTwitchChannel(user, this.ChatConfig.TwitchChannel, this.Client_OnMessageReceived);
             if (this.soundThread.Join(5000)) {
                 this.soundThread.Interrupt();
             }
         }
+        
+        public string? CurrentUsername { get; set; }
 
         /// <summary>
         ///     The main thread used to play sound asynchronously.
@@ -119,8 +122,14 @@
                             return;
                         }
 
+                        if (messageToSkip > 0) {
+                            --messageToSkip;
+                            Console.WriteLine($"Skipping: {e.ChatMessage.Username} says {e.ChatMessage.Message}");
+                            continue;
+                        }
+
                         Console.WriteLine($"Running: {e.ChatMessage.Username} says {e.ChatMessage.Message}");
-                        if (null == this.chatConfig) {
+                        if (null == this.ChatConfig) {
                             continue;
                         }
 
@@ -154,8 +163,8 @@
                         using (var stream = new MemoryStream()) {
                             // Setup the microsoft TTS object according to the settings.
                             synth.SetOutputToWaveStream(stream);
-                            synth.SelectVoice(this.chatConfig.TtsVoice);
-                            synth.Volume = (int)this.chatConfig.TtsVolume;
+                            synth.SelectVoice(this.ChatConfig.TtsVoice);
+                            synth.Volume = (int)this.ChatConfig.TtsVolume;
                             synth.Speak(chatMessage);
 
                             // Now that we filled the stream, seek to the beginning so we can play it.
@@ -173,8 +182,8 @@
                                     this.ttsSoundOutput = new WaveOutEvent();
                                     this.ttsSoundOutputSignal = new ManualResetEvent(false);
 
-                                    this.ttsSoundOutput.DeviceNumber = NAudioUtilities.GetOutputDeviceIndex(this.chatConfig.OutputDevice);
-                                    this.ttsSoundOutput.Volume = this.chatConfig.TtsVolume / 100.0f;
+                                    this.ttsSoundOutput.DeviceNumber = NAudioUtilities.GetOutputDeviceIndex(this.ChatConfig.OutputDevice);
+                                    this.ttsSoundOutput.Volume = this.ChatConfig.TtsVolume / 100.0f;
 
                                     this.ttsSoundOutput.Init(reader);
 
@@ -191,8 +200,10 @@
                                 }
 
                                 // Wait for the play to finish, we will get signaled.
+                                CurrentUsername = e.ChatMessage.Username;
                                 var signal = this.ttsSoundOutputSignal;
                                 signal?.WaitOne();
+                                CurrentUsername = null;
                             } finally {
                                 // Finally dispose of everything safely in the lock.
                                 lock (this.ttsSoundOutputLock)
@@ -215,18 +226,18 @@
         ///     Connects to the chat to listen for messages to read in text to speech.
         /// </summary>
         public void Connect() {
-            if (null == this.chatConfig) {
+            if (null == this.ChatConfig) {
                 return;
             }
 
             var config = Configuration.Instance;
-            var user = config.GetTwitchAccount(this.chatConfig.AccountUsername);
+            var user = config.GetTwitchAccount(this.ChatConfig.AccountUsername);
             if (null == user) {
                 return;
             }
 
             var twitchManager = TwitchChatManager.Instance;
-            twitchManager.AddTwitchChannel(user, this.chatConfig.TwitchChannel, this.Client_OnMessageReceived);
+            twitchManager.AddTwitchChannel(user, this.ChatConfig.TwitchChannel, this.Client_OnMessageReceived);
         }
 
         /// <summary>
@@ -261,18 +272,13 @@
             }
         }
 
-        /// <summary>
-        ///     Handles key press anywhere in the OS.
-        /// </summary>
-        /// <param name="keyboard">The key that was pressed in string format.</param>
-        /// <remarks>
-        ///     See:
-        ///     <see href="https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes?redirectedfrom=MSDN" />
-        /// </remarks>
-        private void KeyboardPressCallback(string keyboard) {
-            if ("123".Equals(keyboard, StringComparison.InvariantCultureIgnoreCase)) {
-                this.ttsSoundOutput?.Stop();
-            }
+        public void SkipCurrentTts() {
+            this.ttsSoundOutput?.Stop();
+        }
+        
+        public void SkipAllTts() {
+            messageToSkip = this.soundsToPlay.Count;
+            this.ttsSoundOutput?.Stop();
         }
     }
 }

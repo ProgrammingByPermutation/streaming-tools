@@ -1,0 +1,32 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:streaming_tools.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="streaming_tools.Views.KeystrokesCommandView">
+    <Design.DataContext>
+        <viewModels:KeystrokesCommandViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Button
+            Grid.Row="0"
+            Grid.Column="1"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Width="30"
+            Command="{Binding AddKeystrokeCommand}">
+            <Image Source="/Assets/add.png" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </Button>
+        <ScrollViewer
+            Grid.Row="0"
+            Grid.Column="0">
+            <ItemsControl Items="{Binding Views}" />
+        </ScrollViewer>
+    </Grid>
+</UserControl>

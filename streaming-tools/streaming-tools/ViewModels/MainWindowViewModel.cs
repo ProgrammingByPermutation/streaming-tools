@@ -18,7 +18,7 @@ namespace streaming_tools.ViewModels {
         /// <summary>
         ///     The view responsible for managing the keystroke command.
         /// </summary>
-        private KeystrokeCommandViewModel keystrokeCommandViewModel;
+        private KeystrokesCommandViewModel keystrokesCommandViewModel;
 
         /// <summary>
         ///     The view responsible for laying out windows on the OS.
@@ -53,7 +53,7 @@ namespace streaming_tools.ViewModels {
 #pragma warning restore 8618
             this.AccountsViewModel = new AccountsViewModel();
             this.ChannelPointViewModel = new ChannelPointViewModel();
-            this.KeystrokeCommandViewModel = new KeystrokeCommandViewModel();
+            this.KeystrokesCommandViewModel = new KeystrokesCommandViewModel();
             this.LayoutViewModel = new LayoutsViewModel();
             this.TtsPauseConfigViewModel = new TtsPauseConfigViewModel();
             this.TtsPhoneticWordsViewModel = new TtsPhoneticWordsViewModel();
@@ -80,9 +80,9 @@ namespace streaming_tools.ViewModels {
         /// <summary>
         ///     Gets or sets the  view responsible for managing the keystroke command.
         /// </summary>
-        public KeystrokeCommandViewModel KeystrokeCommandViewModel {
-            get => this.keystrokeCommandViewModel;
-            set => this.RaiseAndSetIfChanged(ref this.keystrokeCommandViewModel, value);
+        public KeystrokesCommandViewModel KeystrokesCommandViewModel {
+            get => this.keystrokesCommandViewModel;
+            set => this.RaiseAndSetIfChanged(ref this.keystrokesCommandViewModel, value);
         }
 
         /// <summary>

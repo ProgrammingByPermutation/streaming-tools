@@ -26,7 +26,7 @@
         /// <summary>
         ///     The command to execute on keystroke.
         /// </summary>
-        private KeystokeCommand? keystokeCommand;
+        private ObservableCollection<KeystokeCommand>? keystrokeCommand;
 
         /// <summary>
         ///     The monitor selected in the layout view.
@@ -80,10 +80,10 @@
         /// <summary>
         ///     Gets or sets the command to execute on keystroke.
         /// </summary>
-        public KeystokeCommand? KeystokeCommand {
-            get => this.keystokeCommand;
+        public ObservableCollection<KeystokeCommand>? KeystrokeCommand {
+            get => this.keystrokeCommand;
             set {
-                this.keystokeCommand = value;
+                this.keystrokeCommand = value;
                 this.OnPropertyChanged();
             }
         }
@@ -191,8 +191,8 @@
                 config.TtsPhoneticUsernames = new ObservableCollection<KeyValuePair<string, string>>();
             }
 
-            if (null == config.KeystokeCommand) {
-                config.KeystokeCommand = new KeystokeCommand();
+            if (null == config.KeystrokeCommand) {
+                config.KeystrokeCommand = new ObservableCollection<KeystokeCommand>();
             }
 
             if (null == config.ChannelPointSoundRedemptions) {
@@ -345,6 +345,26 @@
         ///     Gets or sets the twitch chat to type in.
         /// </summary>
         public string? TwitchChat { get; set; }
+        
+        /// <summary>
+        ///     Gets or sets a value indicating whether this is a keystroke to skip all current messages.
+        /// </summary>
+        public bool ClearMessageQueue { get; set; }
+        
+        /// <summary>
+        ///     Gets or sets a value indicating whether the user that typed the current message should be timed out.
+        /// </summary>
+        public bool TimeoutUserCurrentMessage { get; set; }
+        
+        /// <summary>
+        ///     Gets or sets a value indicating whether the user that typed the current message should be banned.
+        /// </summary>
+        public bool BanUserCurrentMessage { get; set; }
+        
+        /// <summary>
+        ///     Gets or sets a value indicating whether this is a keystroke to send a message in chat.
+        /// </summary>
+        public bool SendChatMessage { get; set; }
     }
 
     /// <summary>

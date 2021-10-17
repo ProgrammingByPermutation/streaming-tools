@@ -10,6 +10,7 @@
     using ReactiveUI;
     using Twitch;
     using TwitchLib.Api.Core.Enums;
+    using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
     using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomRewardRedemptionStatus;
     using TwitchLib.PubSub.Events;
     using Utilities;
@@ -111,7 +112,7 @@
                 var toAdd = actualRewardNames.Except(knownRewardNames);
                 var toDelete = knownRewardNames.Except(actualRewardNames);
 
-                // foreach (var reward in rewards.Data.Where(d => d.Title.StartsWith("Sound:"))) {
+                // foreach (var reward in rewards.Data.Where(d => d.Title.StartsWith("Sound: Jura"))) {
                 //     await api.Helix.ChannelPoints.CreateCustomRewards(user.Id, new CreateCustomRewardsRequest {
                 //         BackgroundColor = reward.BackgroundColor,
                 //         Cost = reward.Cost,
@@ -124,7 +125,7 @@
                 //         IsUserInputRequired = reward.IsUserInputRequired,
                 //         MaxPerStream = reward.MaxPerStreamSetting.MaxPerStream,
                 //         MaxPerUserPerStream = reward.MaxPerUserPerStreamSetting.MaxPerStream,
-                //         Title = "Sound: Scream",
+                //         Title = reward.Title,
                 //         Prompt = reward.Prompt
                 //     });
                 // }

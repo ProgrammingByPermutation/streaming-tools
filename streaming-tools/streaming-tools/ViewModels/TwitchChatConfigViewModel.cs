@@ -1,5 +1,7 @@
 ﻿namespace streaming_tools.ViewModels {
     using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
@@ -17,6 +19,11 @@
     ///     The view responsible for a single entry in the twitch chat configuration list.
     /// </summary>
     public class TwitchChatConfigViewModel : ViewModelBase, IDisposable {
+        /// <summary>
+        /// The publicly available cache of all Twitch Chat TTS objects for twitch channels.
+        /// </summary>
+        public static readonly ConcurrentDictionary<string, TwitchChatTts> TTS_CACHE = new ConcurrentDictionary<string, TwitchChatTts>();
+
         /// <summary>
         ///     Check if a chat is currently connected.
         /// </summary>
@@ -203,7 +210,9 @@
         public bool TtsOn {
             get => this.ttsOn;
             set {
-                if (value == this.ttsOn) {
+                if (value == this.ttsOn || 
+                    string.IsNullOrWhiteSpace(this.chatConfig?.TwitchChannel) ||
+                    string.IsNullOrWhiteSpace(this.chatConfig.AccountUsername)) {
                     return;
                 }
 
@@ -212,7 +221,11 @@
                 if (value) {
                     this.tts = new TwitchChatTts(this.chatConfig);
                     this.tts.Connect();
-
+                    
+                    if (null != this.chatConfig?.TwitchChannel) {
+                        TTS_CACHE[this.chatConfig.TwitchChannel.ToLowerInvariant()] = this.tts;
+                    }
+                    
                     if (null != this.pauseObject) {
                         this.pauseObject.Tts = this.tts;
                     }
@@ -221,6 +234,11 @@
                         this.pauseObject.Tts = null;
                     }
 
+                    if (null != this.chatConfig.TwitchChannel) {
+                        TwitchChatTts? dontCare;
+                        TwitchChatConfigViewModel.TTS_CACHE.TryRemove(this.chatConfig.TwitchChannel.ToLowerInvariant(), out dontCare);
+                    }
+                    
                     this.tts?.Dispose();
                     this.tts = null;
                 }

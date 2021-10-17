@@ -48,22 +48,8 @@
                     </Border>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Twitch Streaming">
+            <TabItem Header="Channel Points">
                 <DockPanel LastChildFill="True">
-                    <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center"
-                               FontWeight="Bold"
-                               FontSize="16"
-                               Margin="0,0,0,5">
-                        Hotkey Commands
-                    </TextBlock>
-                    <Border DockPanel.Dock="Top" BorderBrush="black"
-                            BorderThickness="1"
-                            CornerRadius="3"
-                            Padding="4"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,0,2,0">
-                        <views:KeystrokeCommandView DataContext="{Binding KeystrokeCommandViewModel}" />
-                    </Border>
                     <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center"
                                FontWeight="Bold"
                                FontSize="16"
@@ -77,6 +63,24 @@
                             HorizontalAlignment="Stretch"
                             Margin="0,0,2,0">
                         <views:ChannelPointView DataContext="{Binding ChannelPointViewModel}" />
+                    </Border>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Hotkeys">
+                <DockPanel LastChildFill="True">
+                    <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center"
+                               FontWeight="Bold"
+                               FontSize="16"
+                               Margin="0,0,0,5">
+                        Hotkey Commands
+                    </TextBlock>
+                    <Border DockPanel.Dock="Top" BorderBrush="black"
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Padding="4"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,0,2,0">
+                        <views:KeystrokesCommandView DataContext="{Binding KeystrokesCommandViewModel}" />
                     </Border>
                 </DockPanel>
             </TabItem>
