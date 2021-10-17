@@ -3,6 +3,7 @@
     using System.Collections.Concurrent;
     using System.IO;
     using System.Threading;
+    using System.Threading.Tasks;
     using NAudio.Wave;
 
     /// <summary>
@@ -33,7 +34,7 @@
         ///     Initializes a new instance of the <see cref="GlobalSoundManager" /> class.
         /// </summary>
         protected GlobalSoundManager() {
-            this.exitSentinel = new SoundPlayingWrapper(string.Empty, string.Empty, -1);
+            this.exitSentinel = new SoundPlayingWrapper(string.Empty, string.Empty, -1, null);
             this.soundsToPlay = new BlockingCollection<SoundPlayingWrapper>();
             this.soundPlayThread = new Thread(this.SoundPlayThreadMain);
             this.soundPlayThread.IsBackground = true;
@@ -64,12 +65,13 @@
         /// <param name="filename">The name of the file to play.</param>
         /// <param name="outputDevice">The output device to play the file on.</param>
         /// <param name="volume">The volume to play the file at.</param>
-        public void QueueSound(string filename, string outputDevice, int volume) {
+        /// <param name="callback">The callback in invoke after the sound is played.</param>
+        public void QueueSound(string filename, string outputDevice, int volume, Action? callback) {
             if (string.IsNullOrWhiteSpace(filename) || string.IsNullOrWhiteSpace(outputDevice) || volume < 0 || volume > 100) {
                 return;
             }
 
-            this.soundsToPlay.Add(new SoundPlayingWrapper(filename, outputDevice, volume));
+            this.soundsToPlay.Add(new SoundPlayingWrapper(filename, outputDevice, volume, callback));
         }
 
         /// <summary>
@@ -99,7 +101,12 @@
                         signal.Wait();
                         this.CurrentlyPlayingSound = false;
                     }
-                } catch (Exception) { }
+
+                    if (null != sound.Callback) {
+                        Task.Run(sound.Callback);
+                    }
+                } catch (Exception) {
+                }
             }
         }
 
@@ -107,6 +114,11 @@
         ///     A wrapper that contains all of the information we need to play a sound.
         /// </summary>
         public class SoundPlayingWrapper {
+            /// <summary>
+            ///     The callback to invoke after the sound is played.
+            /// </summary>
+            public Action? Callback;
+
             /// <summary>
             ///     The name of the file.
             /// </summary>
@@ -128,10 +140,12 @@
             /// <param name="filename">The name of the file.</param>
             /// <param name="outputDevice">The output device to stream to.</param>
             /// <param name="volume">The volume to play the file at.</param>
-            public SoundPlayingWrapper(string filename, string outputDevice, int volume) {
+            /// <param name="callback">The callback to invoke after the sound is played.</param>
+            public SoundPlayingWrapper(string filename, string outputDevice, int volume, Action? callback) {
                 this.Filename = filename;
                 this.OutputDevice = outputDevice;
                 this.Volume = volume;
+                this.Callback = callback;
             }
         }
     }

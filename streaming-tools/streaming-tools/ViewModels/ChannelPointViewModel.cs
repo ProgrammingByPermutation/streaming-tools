@@ -9,6 +9,8 @@
     using DynamicData;
     using ReactiveUI;
     using Twitch;
+    using TwitchLib.Api.Core.Enums;
+    using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomRewardRedemptionStatus;
     using TwitchLib.PubSub.Events;
     using Utilities;
 
@@ -97,7 +99,7 @@
                     return;
                 }
 
-                var response = await api.Helix.Users.GetUsersAsync(logins: new List<string> { account.Username });
+                var response = await api.Helix.Users.GetUsersAsync(logins: new List<string> {account.Username});
                 var user = response.Users.FirstOrDefault();
                 if (null == user) {
                     return;
@@ -109,8 +111,26 @@
                 var toAdd = actualRewardNames.Except(knownRewardNames);
                 var toDelete = knownRewardNames.Except(actualRewardNames);
 
+                // foreach (var reward in rewards.Data.Where(d => d.Title.StartsWith("Sound:"))) {
+                //     await api.Helix.ChannelPoints.CreateCustomRewards(user.Id, new CreateCustomRewardsRequest {
+                //         BackgroundColor = reward.BackgroundColor,
+                //         Cost = reward.Cost,
+                //         GlobalCooldownSeconds = reward.GlobalCooldownSetting.GlobalCooldownSeconds,
+                //         ShouldRedemptionsSkipRequestQueue = reward.ShouldRedemptionsSkipQueue,
+                //         IsEnabled = reward.IsEnabled,
+                //         IsGlobalCooldownEnabled = reward.GlobalCooldownSetting.IsEnabled,
+                //         IsMaxPerStreamEnabled = reward.MaxPerStreamSetting.IsEnabled,
+                //         IsMaxPerUserPerStreamEnabled = reward.MaxPerUserPerStreamSetting.IsEnabled,
+                //         IsUserInputRequired = reward.IsUserInputRequired,
+                //         MaxPerStream = reward.MaxPerStreamSetting.MaxPerStream,
+                //         MaxPerUserPerStream = reward.MaxPerUserPerStreamSetting.MaxPerStream,
+                //         Title = "Sound: Scream",
+                //         Prompt = reward.Prompt
+                //     });
+                // }
+
                 foreach (var reward in toAdd) {
-                    Configuration.Instance.ChannelPointSoundRedemptions.Add(new ChannelPointSoundRedemption { Name = reward });
+                    Configuration.Instance.ChannelPointSoundRedemptions.Add(new ChannelPointSoundRedemption {Name = reward});
                 }
 
                 foreach (var reward in toDelete) {
@@ -122,7 +142,8 @@
 
                 this.ChannelPointSounds.AddRange(Configuration.Instance.ChannelPointSoundRedemptions.Select(c => new ChannelPointSoundWrapper(this, c)));
                 TwitchChatManager.Instance.AddChannelPointsCallback(account, account.Username, this.OnRewardRedeemed);
-            } catch (Exception) { }
+            } catch (Exception) {
+            }
         }
 
         /// <summary>
@@ -130,7 +151,7 @@
         /// </summary>
         /// <param name="sender">The pub sub object.</param>
         /// <param name="e">The reward information.</param>
-        private void OnRewardRedeemed(object? sender, OnRewardRedeemedArgs e) {
+        private async void OnRewardRedeemed(object? sender, OnRewardRedeemedArgs e) {
             if (null == Configuration.Instance.ChannelPointSoundRedemptions || string.IsNullOrWhiteSpace(this.OutputDevice)) {
                 return;
             }
@@ -149,7 +170,33 @@
                 volume = 0;
             }
 
-            GlobalSoundManager.Instance.QueueSound(reward.Filename, this.OutputDevice, (int)volume);
+            GlobalSoundManager.Instance.QueueSound(reward.Filename, this.OutputDevice, (int) volume, async () => {
+                var account = Configuration.Instance.TwitchAccounts?.FirstOrDefault(a => a.IsUsersStreamingAccount);
+                if (null == account || null == account.Username) {
+                    return;
+                }
+
+                var api = await TwitchChatManager.Instance.GetTwitchClientApi(account.Username);
+                if (null == api) {
+                    return;
+                }
+
+                var userResponse = await api.Helix.Users.GetUsersAsync(logins: new List<string> {account.Username});
+                var user = userResponse.Users.FirstOrDefault();
+                if (null == user) {
+                    return;
+                }
+
+                try {
+                    await api.Helix.ChannelPoints.UpdateCustomRewardRedemptionStatus(
+                        user.Id,
+                        e.RewardId.ToString(),
+                        new List<string>(new[] {e.RedemptionId.ToString()}),
+                        new UpdateCustomRewardRedemptionStatusRequest {Status = CustomRewardRedemptionStatus.FULFILLED}
+                    );
+                } catch {
+                }
+            });
         }
 
         /// <summary>
@@ -266,7 +313,7 @@
                     volume = 0;
                 }
 
-                GlobalSoundManager.Instance.QueueSound(this.Filename, this.parent.OutputDevice, (int)volume);
+                GlobalSoundManager.Instance.QueueSound(this.Filename, this.parent.OutputDevice, (int) volume, null);
             }
 
             /// <summary>
