@@ -24,12 +24,16 @@
             }
 
             string chatMessage = messageInfo.ChatMessage.Message;
-            if (chatMessage.Contains("Wanna become famous?", StringComparison.InvariantCultureIgnoreCase) &&
+            if (
+                (
+                    chatMessage.Contains("Wanna become famous?", StringComparison.InvariantCultureIgnoreCase) ||
+                    chatMessage.Contains("Want to become famous?", StringComparison.InvariantCultureIgnoreCase)
+                )
+                &&
                 (
                     Regex.IsMatch(chatMessage, Constants.REGEX_URL) ||
                     chatMessage.Contains("Buy", StringComparison.InvariantCultureIgnoreCase) &&
                     chatMessage.Contains("followers", StringComparison.InvariantCultureIgnoreCase) &&
-                    chatMessage.Contains("primes", StringComparison.InvariantCultureIgnoreCase) &&
                     chatMessage.Contains("viewers", StringComparison.InvariantCultureIgnoreCase)
                 )) {
                 return false;
