@@ -15,7 +15,7 @@
     public class KeystrokeCommandViewModel : ViewModelBase {
         private bool banUserCurrentMessage;
         private bool clearMessageQueue;
-        
+
 
         /// <summary>
         ///     The command to write in chat.
@@ -59,7 +59,7 @@
             this.Config = config;
             this.KeyCode = config.KeyCode;
             this.Command = config.Command;
-            this.SelectedTwitchChat = config.TwitchChat;
+            this.SelectedTwitchChat = GetStreamingAccount();
             this.ClearMessageQueue = config.ClearMessageQueue;
             this.TimeoutUserCurrentMessage = config.TimeoutUserCurrentMessage;
             this.BanUserCurrentMessage = config.BanUserCurrentMessage;
@@ -162,6 +162,11 @@
             this.deleteCallback?.Invoke(this);
         }
 
+        private string? GetStreamingAccount() {
+            return this.SelectedTwitchChat ??
+                   Configuration.Instance.TwitchAccounts?.FirstOrDefault(a => a.IsUsersStreamingAccount)?.Username;
+        }
+
         /// <summary>
         ///     Raised when keystrokes are received from the keyboard.
         /// </summary>
@@ -178,9 +183,7 @@
             }
 
             int receivedKeycode;
-            if (string.IsNullOrWhiteSpace(this.SelectedTwitchChat) ||
-                null == this.KeyCode ||
-                string.IsNullOrWhiteSpace(this.Command) ||
+            if (null == this.KeyCode ||
                 !int.TryParse(keycode, out receivedKeycode) || this.KeyCode != receivedKeycode) {
                 return;
             }
@@ -291,11 +294,12 @@
         }
 
         private void HandleSendChatMessage() {
-            if (null == this.SelectedTwitchChat) {
+            string? account = GetStreamingAccount();
+            if (null == account) {
                 return;
             }
 
-            var client = TwitchChatManager.Instance.GetTwitchChannelClient(this.SelectedTwitchChat);
+            var client = TwitchChatManager.Instance.GetTwitchChannelClient(account);
             if (null == client) {
                 return;
             }
@@ -304,7 +308,7 @@
                 client.Reconnect();
             }
 
-            client.SendMessage(this.SelectedTwitchChat, this.Command);
+            client.SendMessage(account, this.Command);
         }
 
         /// <summary>
@@ -316,10 +320,9 @@
             if (null == Configuration.Instance.KeystrokeCommand) {
                 return;
             }
-            
+
             config.KeyCode = this.KeyCode;
             config.Command = this.Command;
-            config.TwitchChat = this.SelectedTwitchChat;
             this.config.SkipMessage = this.SkipMessage;
             config.ClearMessageQueue = this.ClearMessageQueue;
             config.TimeoutUserCurrentMessage = this.TimeoutUserCurrentMessage;

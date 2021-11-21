@@ -342,11 +342,6 @@
         public int? KeyCode { get; set; }
 
         /// <summary>
-        ///     Gets or sets the twitch chat to type in.
-        /// </summary>
-        public string? TwitchChat { get; set; }
-        
-        /// <summary>
         ///     Gets or sets a value indicating whether this is a keystroke to skip the current message.
         /// </summary>
         public bool SkipMessage { get; set; }
