@@ -106,7 +106,7 @@
                     return;
                 }
 
-                var rewards = await api.Helix.ChannelPoints.GetCustomReward(user.Id);
+                var rewards = await api.Helix.ChannelPoints.GetCustomRewardAsync(user.Id);
                 var actualRewardNames = rewards.Data.Select(r => r.Title);
                 var knownRewardNames = Configuration.Instance.ChannelPointSoundRedemptions.Select(r => r.Name);
                 var toAdd = actualRewardNames.Except(knownRewardNames);
@@ -153,7 +153,7 @@
         /// <param name="sender">The pub sub object.</param>
         /// <param name="e">The reward information.</param>
         private async void OnRewardRedeemed(object? sender, OnRewardRedeemedArgs e) {
-            if (null == Configuration.Instance.ChannelPointSoundRedemptions || string.IsNullOrWhiteSpace(this.OutputDevice)) {
+            if (null == Configuration.Instance.ChannelPointSoundRedemptions || string.IsNullOrWhiteSpace(this.OutputDevice) || !"UNFULFILLED".Equals(e.Status)) {
                 return;
             }
 
@@ -189,7 +189,7 @@
                 }
 
                 try {
-                    await api.Helix.ChannelPoints.UpdateCustomRewardRedemptionStatus(
+                    await api.Helix.ChannelPoints.UpdateRedemptionStatusAsync(
                         user.Id,
                         e.RewardId.ToString(),
                         new List<string>(new[] {e.RedemptionId.ToString()}),

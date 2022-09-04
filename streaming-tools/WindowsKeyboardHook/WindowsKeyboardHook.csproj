@@ -15,7 +15,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="PInvoke.User32" Version="0.7.104"/>
+        <PackageReference Include="PInvoke.User32" Version="0.7.124" />
     </ItemGroup>
 
 </Project>

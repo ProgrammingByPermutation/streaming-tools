@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <RootNamespace>streaming_tools</RootNamespace>
         <Platforms>AnyCPU;x64</Platforms>
         <ApplicationIcon>icon.ico</ApplicationIcon>
+        <LangVersion>10</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -38,21 +39,21 @@
         <None Include="..\.editorconfig" Link=".editorconfig" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.6" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
-        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.6" />
-        <PackageReference Include="NAudio.Core" Version="2.0.0" />
-        <PackageReference Include="NAudio.WinMM" Version="2.0.1" />
+        <PackageReference Include="Avalonia" Version="0.10.18" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.18" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+        <PackageReference Include="NAudio.Core" Version="2.1.0" />
+        <PackageReference Include="NAudio.WinMM" Version="2.1.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="PInvoke.User32" Version="0.7.104" />
+        <PackageReference Include="PInvoke.User32" Version="0.7.124" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.Speech" Version="5.0.0" />
-        <PackageReference Include="TwitchLib" Version="3.2.0" />
-        <PackageReference Include="WhoisClient.NET" Version="3.0.1" />
+        <PackageReference Include="System.Speech" Version="6.0.0" />
+        <PackageReference Include="TwitchLib" Version="3.4.1" />
+        <PackageReference Include="WhoisClient.NET" Version="4.0.0" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Views\AccountsView.axaml.cs">
