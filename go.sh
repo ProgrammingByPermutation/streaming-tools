@@ -8,7 +8,7 @@ echo $VERSION
 git config --global user.email "dev.nullinside@gmail.com".
 git config --global user.name "J█████"
 git tag -a $VERSION -m $VERSION
-git push origin --tags
+git push https://ProgrammingByPermutation:$TOKEN@github.com/ProgrammingByPermutation/streaming-tools.git --tags
 
 dotnet publish -r win-x64 -c Release streaming-tools/streaming-tools.sln /p:AssemblyVersion=$VERSION
 
