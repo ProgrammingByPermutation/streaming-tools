@@ -2,10 +2,10 @@
 export GIT_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
 export VERSION=$(./version.sh $GIT_VERSION revision)
 
-git tag
-
 echo $GIT_VERSION
 echo $VERSION
+
+git tag -s $VERSION -m $VERSION
 
 dotnet publish -r win-x64 -c Release streaming-tools/streaming-tools.sln /p:AssemblyVersion=$VERSION
 
