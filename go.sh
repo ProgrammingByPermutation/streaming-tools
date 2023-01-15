@@ -2,6 +2,8 @@
 export GIT_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
 export VERSION=$(./version.sh $GIT_VERSION revision)
 
+git describe --tags
+
 echo $GIT_VERSION
 echo $VERSION
 
