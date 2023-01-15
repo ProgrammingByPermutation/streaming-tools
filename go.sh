@@ -2,6 +2,9 @@
 export GIT_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
 export VERSION=$(./version.sh $GIT_VERSION revision)
 
+echo $GIT_VERSION
+echo $VERSION
+
 dotnet publish -r win-x64 -c Release streaming-tools/streaming-tools.sln /p:AssemblyVersion=$VERSION
 
 cd streaming-tools/StreamingTools/bin/Release/net7.0/win-x64/publish/
