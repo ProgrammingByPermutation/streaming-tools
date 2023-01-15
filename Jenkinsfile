@@ -11,7 +11,8 @@ pipeline {
         stage('Build & Deploy') {
             steps {
 				withCredentials([string(credentialsId: 'GITHUB_PERSONAL_ACCESS_TOKEN', variable: 'TOKEN')]) {
-					sh """					
+					sh """			
+						git tag
 						export GH_TOKEN=$TOKEN
 						chmod +x go.sh version.sh
 						./go.sh 3.0.0.0
