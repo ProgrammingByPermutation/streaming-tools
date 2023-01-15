@@ -7,7 +7,7 @@ echo $VERSION
 
 git config --global user.email "dev.nullinside@gmail.com".
 git config --global user.name "J█████"
-git tag -s $VERSION -m $VERSION
+git tag -a $VERSION -m $VERSION
 
 dotnet publish -r win-x64 -c Release streaming-tools/streaming-tools.sln /p:AssemblyVersion=$VERSION
 
